@@ -48,6 +48,7 @@ describe('CartComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     service = fixture.debugElement.injector.get(BookService);
+    spyOn(service, 'getBooksFromCart').and.callFake(() => null);
   });
 
   it('should create', () => {
