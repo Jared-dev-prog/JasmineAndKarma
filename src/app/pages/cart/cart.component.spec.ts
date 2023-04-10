@@ -99,4 +99,26 @@ describe('CartComponent', () => {
     expect(spy2).toHaveBeenCalled();
     expect(book.amount).toBe(2);
   });
+
+  it('onClearBook works fine', () => {
+    component.listCartBook = listCartBook;
+
+    let spy1 = spyOn(component as any, '_clearListCartBook').and.callThrough();
+    let spy2 = spyOn(service, 'removeBooksFromCart').and.callFake(() => null);
+
+    component.onClearBooks();
+
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(component.listCartBook.length).toBe(0);
+  });
+
+  it('onClearBook works bad', () => {
+    component.listCartBook = [];
+    let spy1 = spyOn(console, 'log');
+
+    component.onClearBooks();
+
+    expect(spy1).toHaveBeenCalledWith('No books available');
+  });
 });
