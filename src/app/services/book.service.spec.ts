@@ -31,7 +31,9 @@ const listCartBook: Book[] = [
   },
 ];
 
-fdescribe('ServiceBook', () => {
+const storage = {};
+
+describe('ServiceBook', () => {
   let service: BookService;
   let httpMock: HttpTestingController;
 
@@ -45,6 +47,9 @@ fdescribe('ServiceBook', () => {
   beforeEach(() => {
     service = TestBed.inject(BookService);
     httpMock = TestBed.inject(HttpTestingController);
+    spyOn(localStorage, 'getItem').and.callFake((key: string) => {
+      return storage[key] ? storage[key] : null;
+    });
   });
 
   afterEach(() => {
@@ -63,5 +68,10 @@ fdescribe('ServiceBook', () => {
     const req = httpMock.expectOne(environment.API_REST_URL + `/book`);
     expect(req.request.method).toBe('GET');
     req.flush(listCartBook);
+  });
+
+  it('getBooksFromCart return a list of books when listBook is null or not null', () => {
+    const listBook = service.getBooksFromCart();
+    expect(listBook.length).toBe(0);
   });
 });
