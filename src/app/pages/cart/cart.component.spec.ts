@@ -32,6 +32,7 @@ const listCartBook: Book[] = [
 describe('CartComponent', () => {
   let component: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
+  let service: BookService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -46,6 +47,7 @@ describe('CartComponent', () => {
     fixture = TestBed.createComponent(CartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    service = fixture.debugElement.injector.get(BookService);
   });
 
   it('should create', () => {
@@ -56,5 +58,45 @@ describe('CartComponent', () => {
     let totalPrice = component.getTotalPrice(listCartBook);
     expect(totalPrice).toBeGreaterThan(0);
     expect(totalPrice).not.toBeNull();
+  });
+
+  it('onInputNumberChange increments correctly', () => {
+    const action: string = 'plus';
+    const book: Book = {
+      name: '',
+      author: '',
+      isbn: '',
+      price: 10,
+      amount: 3,
+    };
+
+    let spy1 = spyOn(service, 'updateAmountBook').and.callFake(() => null);
+    let spy2 = spyOn(component, 'getTotalPrice').and.callFake(() => null);
+
+    component.onInputNumberChange(action, book);
+
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(book.amount).toBe(4);
+  });
+
+  it('onInputNumberChange decrements correctly', () => {
+    const action: string = 'minus';
+    const book: Book = {
+      name: '',
+      author: '',
+      isbn: '',
+      price: 10,
+      amount: 3,
+    };
+
+    let spy1 = spyOn(service, 'updateAmountBook').and.callFake(() => null);
+    let spy2 = spyOn(component, 'getTotalPrice').and.callFake(() => null);
+
+    component.onInputNumberChange(action, book);
+
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(book.amount).toBe(2);
   });
 });
